@@ -12,7 +12,7 @@ set BANCOS;
 
 /*Parametros*/
 param DISTANCIA{i in BANCOS, j in BANCOS : i<>j};
-param MONTO {i in BANCOS: i<>'ORIGEN'};
+param MONTO {i in BANCOS};
 param MAX_DINERO;
 
 /* Definición de Variables */
@@ -31,8 +31,8 @@ s.t. voyI{i in BANCOS}: sum{j in BANCOS : i<>j} Y[i,j] = 1;
 s.t. orden{i in BANCOS,j in BANCOS : i<>j and i<>'ORIGEN' and j<>'ORIGEN'}: U[i] - U[j] + card(BANCOS) * Y[i,j] <= card(BANCOS) - 1;
 
 # Dinero en el camión
-s.t. dineroEnCamion1{i in BANCOS, j in BANCOS: i<>j and i<>'ORIGEN'}: DINERO[i] + MONTO[i] - DINERO[j] <= (1-Y[i,j]) * 999999;
-s.t. dineroEnCamion2{i in BANCOS, j in BANCOS: i<>j and i<>'ORIGEN'}: DINERO[i] + MONTO[i] - DINERO[j] >= - (1-Y[i,j]) * 999999;
+s.t. dineroEnCamion1{i in BANCOS, j in BANCOS: i<>j and i<>'ORIGEN'}: DINERO[i] + MONTO[j] - DINERO[j] <= (1-Y[i,j]) * 999999;
+s.t. dineroEnCamion2{i in BANCOS, j in BANCOS: i<>j and i<>'ORIGEN'}: DINERO[i] + MONTO[j] - DINERO[j] >= - (1-Y[i,j]) * 999999;
 
 s.t. capacidadCamion{j in BANCOS}: DINERO[j] <= MAX_DINERO;
 
@@ -60,14 +60,15 @@ param DISTANCIA:   ORIGEN PORTENO DELPLATA DELOSANDES PLURAL DELNORTE PAMPEANO C
 
 # Operaciones a realizar en cada banco (+ retiros, - extracciones)
 param MONTO :=
+ORIGEN		0
 PORTENO		5
 DELPLATA	-1
 DELOSANDES	1
-PLURAL		-2
-DELNORTE	5
-PAMPEANO	1
+PLURAL		2
+DELNORTE	-5
+PAMPEANO	-5
 COOPERATIVO	8
-SOL			-5
+SOL			-1
 REPUBLICA	9
 VIENTOSDELSUR	2;
 
